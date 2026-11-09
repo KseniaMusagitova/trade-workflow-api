@@ -22,3 +22,8 @@ def test_create_list_report_delete():
 
 def test_reject_invalid_trade():
     assert client.post('/trades', json={'symbol':'AAPL','side':'BUY','quantity':0,'price':'10'}).status_code == 422
+
+def test_count_trades():
+    response = client.get("trades/count")
+    assert response.status_code == 200
+    assert response.json() == {"count": 0}
