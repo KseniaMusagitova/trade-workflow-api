@@ -53,6 +53,11 @@ def get_db():
 def health():
     return {'status': 'ok'}
 
+@app.get('/trades/count')
+def count_trades(db: Session = Depends(get_db)):
+    count=db.query(Trade).count()
+    return {"count": count}
+
 @app.post('/trades', response_model=TradeOut, status_code=201)
 def create_trade(payload: TradeIn, db: Session = Depends(get_db)):
     trade = Trade(**payload.model_dump(exclude={'side', 'symbol'}), side=payload.side.value, symbol=payload.symbol.upper())
