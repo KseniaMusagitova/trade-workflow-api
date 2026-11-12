@@ -27,3 +27,24 @@ def test_count_trades():
     response = client.get("trades/count")
     assert response.status_code == 200
     assert response.json() == {"count": 0}
+
+def test_filter_trades_by_symbol():
+    client.post("/trades", json={
+        "symbol": "AAPL",
+        "side": "BUY",
+        "quantity": 3,
+        "price": "150.00"
+    })
+
+    client.post("/trades", json={
+        "symbol": "MSFT",
+        "side": "BUY",
+        "quantity": 2,
+        "price": "420.00"
+    })
+
+    response = client.get("/trades?symbol=AAPL")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["symbol"] == "AAPL"
